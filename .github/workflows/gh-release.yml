@@ -1,0 +1,44 @@
+name: Upload Release Asset
+
+on:
+  push:
+    tags:
+    - 'edk2-*'
+
+jobs:
+  build:
+    name: Upload Shell.efi
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git uuid-dev iasl nasm python
+        shell: bash
+      - name: Build Release
+        run: |
+          ./build.sh
+          ls -la ./build/Shell.efi
+        shell: bash
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/Shell.efi
+          asset_name: Shell.efi
+          asset_content_type: application/octet-stream
