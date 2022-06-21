@@ -22,8 +22,8 @@ fi
 pushd edk2
 make -C BaseTools
 source ./edksetup.sh
-build -p ShellPkg/ShellPkg.dsc -b RELEASE -a IA32 -t GCC5
-cp ./Build/Shell/RELEASE_GCC5/IA32/ShellPkg/Application/Shell/Shell/OUTPUT/Shell.efi ../
+build -p ShellPkg/ShellPkg.dsc -b RELEASE -a X64 -t GCC5
+cp ./Build/Shell/RELEASE_GCC5/X64/ShellPkg/Application/Shell/Shell/OUTPUT/Shell.efi ../
 popd
 
 popd
